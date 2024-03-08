@@ -1,0 +1,13 @@
+.bash_history
+.bash_logout
+.bashrc
+.cache/
+.config/
+.git-credentials
+.gitconfig
+.profile
+.selected_editor
+.sudo_as_admin_successful
+.vscode-server/
+.vscodium-server/
+.wget-hsts

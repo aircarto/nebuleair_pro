@@ -3,13 +3,19 @@ Script to run every minutes as a cronjob:
 * * * * * /usr/bin/python3 /home/nebuleairpro/nextpm/scanUSB.py
 
 Read NextPM values over 3 USB ports and send them to aircarto's server
+
+Need to install python3 and other libraries:
+sudo apt install python3-pip
+sudo pip3 install pyserial --break-system-packages
+sudo pip3 install requests --break-system-packages
+
 '''
 
 import serial
 import requests
 import json
 
-url = 'https://data.nebuleair.fr/pro.php'
+url = 'https://data.nebuleair.fr/pro_wifi.php'
 headers = {'Content-Type': 'application/json'}
 
 usbPorts = ['/dev/ttyUSB1', '/dev/ttyUSB2', '/dev/ttyUSB3']

@@ -1,7 +1,6 @@
 '''
-Script to connect to the networks we want with the SARA-R410
-SFR: 20810
-Orange: 20801
+Script to send data with the SARA-R410 
+HTTP POST REQUEST
 '''
 
 import serial
@@ -13,10 +12,13 @@ ser = serial.Serial(
     parity=serial.PARITY_NONE, #PARITY_NONE, PARITY_EVEN or PARITY_ODD
     stopbits=serial.STOPBITS_ONE,
     bytesize=serial.EIGHTBITS,
-    timeout = 90
+    timeout = 2
 )
 
-ser.write(b'AT+COPS?\r')     #searching for available networks (ATTENTION: need at least 1,30 min to respond)
+#ser.write(b'AT+UHTTP=0,1,"webhook.site"\r')            #Set the URL
+ser.write(b'AT+UHTTPC=0,4,"/b611c895-6639-456d-9bac-cb1a9e429632","data.txt","sensordata.json",4\r')                  #send the command                                                                                
+#ser.write(b'AT+URDFILE="data.txt"\r')                  #read the reply                                                                                
+
 
 response_lines = []
 

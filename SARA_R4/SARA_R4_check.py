@@ -1,6 +1,5 @@
 '''
-Script to scan the networks available with the SARA-R410
-
+Script to see if the SARA-R410 is running
 '''
 
 import serial
@@ -15,8 +14,8 @@ ser = serial.Serial(
     timeout = 2
 )
 
-#ser.write(b'ATI\r')            #General Information
-ser.write(b'AT+CCID?\r')       #SIM card number
+ser.write(b'ATI\r')            #General Information
+#ser.write(b'AT+CCID?\r')       #SIM card number
 #ser.write(b'AT+CPIN?\r')       #Check the status of the SIM card
 #ser.write(b'AT+CIND?\r')       #Indication state (last number is SIM detection: 0 no SIM detection, 1 SIM detected, 2 not available)
 #ser.write(b'AT+UGPIOR=?\r')   #Reads the current value of the specified GPIO pin
@@ -28,25 +27,19 @@ ser.write(b'AT+CCID?\r')       #SIM card number
 #ser.write(b'AT+IPR?')           #Check/Define baud rate
 #ser.write(b'AT+CMUX=?')
 
-response_lines = []
 
-try:
-    # Read lines until a timeout occurs
+
+def read_serial_lines(ser):
     response_lines = []
     while True:
         line = ser.readline().decode('utf-8').strip()
         if not line:
-            break  # Break the loop if an empty line is encountered
+            break 
         response_lines.append(line)
+    return response_lines
 
-    # Print the response
-    for line in response_lines:
-        print(line)
 
-except serial.SerialException as e:
-    print(f"Error: {e}")
+response_lines = read_serial_lines(ser)
+for line in response_lines:
+    print(line)
 
-finally:
-    if ser.is_open:
-        ser.close()
-        print("Serial closed")
