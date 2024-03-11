@@ -1,28 +1,83 @@
 '''
 Script to read data from one NextPM and send it to the server with the SARA R410 module
+Can be lauched as a cronjob every minutes
+* * * * * /usr/bin/python3 /home/nebuleairpro/production/nebuleairpro3.py
+
+-> ATTENTION: SARA R4 Module should me turned on first!
+
 
 Need to install python3 and other libraries:
 sudo apt install python3-pip
 sudo pip3 install pyserial --break-system-packages
 sudo pip3 install requests --break-system-packages
 sudo pip3 install colorama --break-system-packages
+
+Send data as a JSON:
+{
+  "capteurID": "nebuleairpro1",
+  "data": [
+    {
+      "PM1": 0.9,
+      "PM25": 1,
+      "PM10": 0,
+      "error_num": "000"
+    },
+    {
+      "PM1": 1.2,
+      "PM25": 1.7,
+      "PM10": 5.2,
+      "error_num": "000"
+    },
+    {
+      "PM1": 1.4,
+      "PM25": 2.4,
+      "PM10": 2.4,
+      "error_num": "000"
+    }
+  ]
+}
+
 '''
 
 import serial
 import time
 import json
 
+capteurID = 'nebuleairpro1'
+
+#SARA R4 Module
 ser = serial.Serial(
     port='/dev/ttyUSB0',
     baudrate=115200, #115200 ou 9600
     parity=serial.PARITY_NONE, #PARITY_NONE, PARITY_EVEN or PARITY_ODD
     stopbits=serial.STOPBITS_ONE,
     bytesize=serial.EIGHTBITS,
-    timeout = 1
+    timeout = 4
 )
 
-ser_NPM2 = serial.Serial(
+#First NPM
+ser_NPM1 = serial.Serial(
     port='/dev/ttyUSB1',
+    baudrate=115200,
+    parity=serial.PARITY_EVEN,
+    stopbits=serial.STOPBITS_ONE,
+    bytesize=serial.EIGHTBITS,
+    timeout = 2
+)
+
+#Second NPM
+ser_NPM2 = serial.Serial(
+    port='/dev/ttyUSB2',
+    baudrate=115200,
+    parity=serial.PARITY_EVEN,
+    stopbits=serial.STOPBITS_ONE,
+    bytesize=serial.EIGHTBITS,
+    timeout = 2
+)
+
+#Third NPM
+ser_NPM3 = serial.Serial(
+    port='/dev/ttyUSB3',
     baudrate=115200,
     parity=serial.PARITY_EVEN,
     stopbits=serial.STOPBITS_ONE,
@@ -39,25 +94,33 @@ def read_serial_lines(ser):
         response_lines.append(line)
     return response_lines
 
-#Write command to NextPM
-ser_NPM2.write(b'\x81\x12\x6D')
-#Read response
-byte_data = ser_NPM2.readline()
-stateByte = int.from_bytes(byte_data[2:3], byteorder='big')
-Statebits = [int(bit) for bit in bin(stateByte)[2:].zfill(8)]
-PM1 = int.from_bytes(byte_data[9:11], byteorder='big')/10
-PM25 = int.from_bytes(byte_data[11:13], byteorder='big')/10
-PM10 = int.from_bytes(byte_data[13:15], byteorder='big')/10
-#create JSON
-data = {
-    'capteurID': 'nebuleairpro1',
-    'sondeID':'NPM2',
-    'PM1': PM1,
-    'PM25': PM25,
-    'PM10': PM10,
-    'error_num' : str(Statebits[0])+str(Statebits[1])+str(Statebits[2])
-}
-json_data = json.dumps(data)
+nextPM_serlist = [ser_NPM1, ser_NPM2, ser_NPM3]
+data = {'capteurID' : capteurID , 'data': []}
+nextPM_id = 1
+
+for nextPM_ser in nextPM_serlist:
+
+    #Write command to NextPM
+    nextPM_ser.write(b'\x81\x12\x6D')     #data60s
+    #Read response
+    byte_data = nextPM_ser.readline()
+    stateByte = int.from_bytes(byte_data[2:3], byteorder='big')
+    Statebits = [int(bit) for bit in bin(stateByte)[2:].zfill(8)]
+    PM1 = int.from_bytes(byte_data[9:11], byteorder='big')/10
+    PM25 = int.from_bytes(byte_data[11:13], byteorder='big')/10
+    PM10 = int.from_bytes(byte_data[13:15], byteorder='big')/10
+    #create python object
+    sensor_data = {
+        'sondeID': 'NPM' + str(nextPM_id),
+        'PM1': PM1,
+        'PM25': PM25,
+        'PM10': PM10,
+        'err' : str(Statebits[0])+str(Statebits[1])+str(Statebits[2])
+    }
+    data['data'].append(sensor_data)
+    nextPM_id = nextPM_id + 1
+
+json_data = json.dumps(data) #convert python object to JSON
 print(json_data)
 JSON_lengh = len(json_data)
 print("JSON lenght:" + str(JSON_lengh) )
