@@ -2,7 +2,7 @@
 Script to run every minutes as a cronjob:
 * * * * * /usr/bin/python3 /home/nebuleairpro/nextpm/scanUSB.py
 
-Read NextPM values over 3 USB ports and send them to aircarto's server
+Read NextPM values over 3 USB ports and send them to aircarto's server via Ethernet/WIFI connexion
 
 Need to install python3 and other libraries:
 sudo apt install python3-pip

@@ -1,0 +1,1 @@
+{"capteurID": "nebuleairpro1", "data": [{"sondeID": "NPM1", "PM1": 2.7, "PM25": 3.0, "PM10": 4.1, "err": "000"}, {"sondeID": "NPM2", "PM1": 3.8, "PM25": 6.0, "PM10": 7.6, "err": "000"}, {"sondeID": "NPM3", "PM1": 4.2, "PM25": 5.6, "PM10": 6.0, "err": "000"}]}

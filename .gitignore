@@ -11,3 +11,4 @@
 .vscode-server/
 .vscodium-server/
 .wget-hsts
+.ssh

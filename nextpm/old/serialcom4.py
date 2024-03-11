@@ -3,9 +3,6 @@ import requests
 import json
 
 
-url = 'https://data.nebuleair.fr/pro.php'
-headers = {'Content-Type': 'application/json'}
-
 ser = serial.Serial(
     port='/dev/ttyUSB2',
     baudrate=115200,

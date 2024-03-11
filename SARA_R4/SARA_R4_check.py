@@ -29,17 +29,23 @@ ser.write(b'ATI\r')            #General Information
 
 
 
-def read_serial_lines(ser):
+try:
+    # Read lines until a timeout occurs
     response_lines = []
     while True:
         line = ser.readline().decode('utf-8').strip()
         if not line:
-            break 
+            break  # Break the loop if an empty line is encountered
         response_lines.append(line)
-    return response_lines
 
+    # Print the response
+    for line in response_lines:
+        print(line)
 
-response_lines = read_serial_lines(ser)
-for line in response_lines:
-    print(line)
+except serial.SerialException as e:
+    print(f"Error: {e}")
 
+finally:
+    if ser.is_open:
+        ser.close()
+        print("Serial closed")
