@@ -10,7 +10,7 @@ import RPi.GPIO as GPIO
 import time
 
 ser = serial.Serial(
-    port='/dev/ttyUSB0',
+    port='/dev/serial0',    #ttyUSB0 ou ttyS0 ou serial0 ou ttyAMA0 si connecté sur les pins RX et TX
     baudrate=115200, #115200 ou 9600
     parity=serial.PARITY_NONE, #PARITY_NONE, PARITY_EVEN or PARITY_ODD
     stopbits=serial.STOPBITS_ONE,

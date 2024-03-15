@@ -45,7 +45,7 @@ capteurID = 'nebuleairpro1'
 
 #First NPM
 ser_NPM1 = serial.Serial(
-    port='/dev/ttyUSB1',
+    port='/dev/ttyUSB0',
     baudrate=115200,
     parity=serial.PARITY_EVEN,
     stopbits=serial.STOPBITS_ONE,
@@ -55,7 +55,7 @@ ser_NPM1 = serial.Serial(
 
 #Second NPM
 ser_NPM2 = serial.Serial(
-    port='/dev/ttyUSB2',
+    port='/dev/ttyUSB1',
     baudrate=115200,
     parity=serial.PARITY_EVEN,
     stopbits=serial.STOPBITS_ONE,
@@ -65,7 +65,7 @@ ser_NPM2 = serial.Serial(
 
 #Third NPM
 ser_NPM3 = serial.Serial(
-    port='/dev/ttyUSB3',
+    port='/dev/ttyUSB2',
     baudrate=115200,
     parity=serial.PARITY_EVEN,
     stopbits=serial.STOPBITS_ONE,
@@ -119,7 +119,7 @@ print("JSON lenght:" + str(JSON_lengh) )
 
 ########## save to file ###############
 
-file_path = "nextpm/data.json"
+file_path = "/home/nebuleairpro/nextpm/data.json"
 
 try:
     # Open the file in write mode
